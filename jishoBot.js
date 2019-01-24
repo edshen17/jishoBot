@@ -31,7 +31,7 @@ function processCommand(receivedMessage) {
     translateMsg(receivedMessage)
   }
 }
-//////////////Edwin's CODE///////////////////////////
+//////////////Edwin's code///////////////////////////
 
 //translates the given message to either jp -> en or en -> jp given inputs and outputs it in Discord
 function translateMsg(msg) {
@@ -40,12 +40,10 @@ function translateMsg(msg) {
 
   if (text.includes('jp')) {
      target = 'ja'
-    // text = text.substr(13)
     text = text.split('jp')[1]
   }
 
    else if (text.includes('en')) {
-  //   text = text.substr(13)
   text = text.split('en')[1]
   }
 
