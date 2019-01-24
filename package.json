@@ -4,6 +4,7 @@
   "description": "A bot that can use google translate to translate either English or Japanese",
   "main": "jishoBot.js",
   "dependencies": {
+    "@google-cloud/translate": "^2.1.3",
     "discord.js": "^11.4.2"
   },
   "devDependencies": {},

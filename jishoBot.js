@@ -1,10 +1,11 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
+const keys = require('./keys.json');
 
 // Imports the Google Cloud client library
-const {Translate} = require('@google-cloud/translate');
+const { Translate } = require('@google-cloud/translate');
 // Your Google Cloud Platform project ID
-const projectId = '';
+const projectId = keys.googleProjectID;
 // Instantiates a client
 const translate = new Translate({
   projectId: projectId,
@@ -38,32 +39,28 @@ function translateMsg(msg) {
   let target = 'en';
   let text = msg.content
 
+//branches sets text to strings after jp/en/translate commands
   if (text.includes('jp')) {
-     target = 'ja'
+    target = 'ja'
     text = text.split('jp')[1]
-  }
-
-   else if (text.includes('en')) {
-  text = text.split('en')[1]
-  }
-
-  else {
+  } else if (text.includes('en')) {
+    text = text.split('en')[1]
+  } else {
     text = text.split('translate')
   }
 
-    translate
-      .translate(text, target)
-      .then(results => {
-        const translation = results[0];
-        msg.reply(translation)
-      })
-      .catch(err => {
-        console.error('ERROR:', err);
-      });
+//Use Google's API
+  translate
+    .translate(text, target)
+    .then(results => {
+      const translation = results[0];
+      msg.reply(translation)
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
 
 }
 
-
-bot_secret_token = ""
-
-client.login(bot_secret_token)
+// log into Discord
+client.login(keys.botSecretToken)
