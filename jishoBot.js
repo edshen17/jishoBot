@@ -79,7 +79,7 @@ function defineWord(arg, msg) {
       }
     });
   } catch {
-    msg.reply('There was an error! Jisho's server may be down, or your link to the dictionary for your BOT is incorect')
+    msg.reply('There was an error! Jisho server may be down, or your link to the dictionary for your BOT is incorect')
   }
 }
 
