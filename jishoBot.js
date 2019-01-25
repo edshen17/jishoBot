@@ -82,26 +82,47 @@ function translateMsg(arg, msg) {
 function defineWord(arg, msg) {
   let word = createSentence(arg, true)
   let encoded = encodeURIComponent(word) //Since we may send Asian characters, we must encode it!
-
-  if (arg.length > 2) {
-    msg.reply(encoded)
-  }
-
+  let link = `https://jisho.org/api/v1/search/words?keyword=${encoded}`
   try {
-    request({ url: `https://jisho.org/api/v1/search/words?keyword=${encoded}`, json: true }, function(err, res, json) {
+    request({ url: link, json: true }, function(err, res, json) {
       if (err) {
         msg.reply(err)
-      }
-
-      else if (json.data.length === 0) {
+      } else if (json.data.length === 0) {
         msg.reply('Please make sure you entered a valid word!')
       } else {
-        msg.reply(`definition: ${json.data[0].senses[0].english_definitions[0]}, reading: ${json.data[0].japanese[0].reading}, kanji: ${json.data[0].japanese[0].word}`)
+        testEmbed(msg, word, encoded, json);
       }
     });
   } catch {
     msg.reply('There was an error! The Jisho server may be down, or your link to the dictionary for your BOT is incorect')
   }
+}
+
+
+function testEmbed(msg, word, encoded, json) {
+  msg.channel.send({
+  "embed": {
+    "title": `Link to ${word} on Jisho.org`,
+    "url": `https://jisho.org/search/${encoded}`,
+    "color": 2273161,
+    "fields": [
+      {
+        "name": "Reading(s):",
+        "value": `${json.data[0].japanese[0].word} (${json.data[0].japanese[0].reading})`
+      },
+      {
+        "name": "Definition(s):",
+        "value": `${json.data[0].senses[0].english_definitions[0]}`
+      },
+      {
+        "name": "Tag(s):",
+        "value": "blank for now"
+      }
+    ]
+  }
+}
+
+);
 }
 
 // log into Discord
