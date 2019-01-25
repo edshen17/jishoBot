@@ -3,10 +3,10 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 const keys = require('./keys.json')
 const request = require('request')
-const { Translate } = require('@google-cloud/translate');
+const { Translate } = require('@google-cloud/translate')
 
 //For Google Translate
-const projectId = keys.googleProjectID;
+const projectId = keys.googleProjectID
 const translate = new Translate({
   projectId: projectId,
 });
@@ -30,31 +30,45 @@ function processCommand(receivedMessage) {
   let arguments = splitCommand.slice(1) // All other words are arguments/parameters/options for the command
 
   if (primaryCommand === 'translate') {
-    translateMsg(receivedMessage)
+    translateMsg(arguments, receivedMessage)
   } else if (primaryCommand === "define") {
     defineWord(arguments, receivedMessage)
   }
 }
 //////////////Edwin's code///////////////////////////
 
-//translates the given message to either jp -> en or en -> jp given inputs and outputs it in Discord
-function translateMsg(msg) {
-  let target = 'en';
-  let text = msg.content
+// creates a sentence (or word) from given array. Used in translateMsg and defineWord
+function createSentence(arr, isWord = false) {
+  let sentence = ""
+  if (!isWord) { //this is really just checking the first arg to see if it's equal to "jp"/"en"
+    arr.shift();
+  }
+  arr.forEach((word) => {
+    sentence += " " + word
+  })
+  return sentence
+}
 
-  //branches sets text to strings after jp/en/translate commands
-  if (text.includes('jp')) {
+//translates the given message to either jp -> en or en -> jp given inputs and outputs it in Discord
+function translateMsg(arg, msg) {
+  let target = arg[0] //target language is the first argument
+  let sentence = ""
+
+  if (arg[0] === 'jp') { // if user wants to translate to Japanese
     target = 'ja'
-    text = text.split('jp')[1]
-  } else if (text.includes('en')) {
-    text = text.split('en')[1]
-  } else {
-    text = text.split('translate')
+    sentence = createSentence(arg)
+  } else if (arg[0] === 'en') { //translate to English
+    target = arg[0]
+    sentence = createSentence(arg)
+  } else { //if no input, translate to English by default.
+    //However, this can be made more flexible so you can have it output other languages if the first arg is different
+    target = 'en'
+    sentence = createSentence(arg, true)
   }
 
   //Use Google's API
   translate
-    .translate(text, target)
+    .translate(sentence, target)
     .then(results => {
       const translation = results[0];
       msg.reply(translation)
@@ -66,10 +80,10 @@ function translateMsg(msg) {
 
 //Searches English or Japanese word on Jisho.org
 function defineWord(arg, msg) {
-  let encoded = encodeURIComponent(arg) //Since we may send Asian characters, we must encode it!
+  let word = createSentence(arg, true)
+  let encoded = encodeURIComponent(word) //Since we may send Asian characters, we must encode it!
 
   if (arg.length > 2) {
-    encoded = encoded.replace("%2C", "%20")
     msg.reply(encoded)
   }
 
@@ -80,15 +94,13 @@ function defineWord(arg, msg) {
       }
 
       else if (json.data.length === 0) {
-        // msg.reply(arg)
-        // msg.reply(msg.content)
         msg.reply('Please make sure you entered a valid word!')
       } else {
-        msg.reply(`definition: ${json.data[0].senses[0].english_definitions[0]}, reading: ${json.data[0].japanese[0].reading}, kanji: ${json.data[0].japanese[0].word}}`)
+        msg.reply(`definition: ${json.data[0].senses[0].english_definitions[0]}, reading: ${json.data[0].japanese[0].reading}, kanji: ${json.data[0].japanese[0].word}`)
       }
     });
   } catch {
-    msg.reply('There was an error! Jisho server may be down, or your link to the dictionary for your BOT is incorect')
+    msg.reply('There was an error! The Jisho server may be down, or your link to the dictionary for your BOT is incorect')
   }
 }
 
