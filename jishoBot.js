@@ -78,6 +78,49 @@ function translateMsg(arg, msg) {
     });
 }
 
+// Embeds given data and makes it look nice in Discord
+function Embed(msg, word, encoded, json) {
+  let definitions = ""
+  let tags = ""
+  json.data[0].senses.forEach((word, index) => { //gets all definitions of the first word and stores them
+    definitions += `\r ${index + 1}.  ${word.english_definitions[0]}`
+  })
+
+  if (json.data[0].tags.length === 1 && json.data[0].is_common) { //if has Wanikani tag and is a common tag
+    tags += `${json.data[0].tags[0]}, common word`
+  } else if (json.data[0].is_common) { //just a common tag
+    tags += `common word`
+  } else if (json.data[0].tags.length > 0) { //just a Wanikani tag
+    tags += `${json.data[0].tags[0]}`
+  } else {
+    tags += 'No tags'
+  }
+
+  //Embeds the data we get from Jisho
+  msg.channel.send({
+      "embed": {
+        "title": `Link to*${word}* on Jisho.org`,
+        "url": `https://jisho.org/search/${encoded}`,
+        "color": 2273161,
+        "fields": [{
+            "name": "Reading(s):",
+            "value": `${json.data[0].japanese[0].word} (${json.data[0].japanese[0].reading})`
+          },
+          {
+            "name": "Definition(s):",
+            "value": `${definitions}`
+          },
+          {
+            "name": "Tag(s):",
+            "value": `${tags}`
+          }
+        ]
+      }
+    }
+
+  );
+}
+
 //Searches English or Japanese word on Jisho.org
 function defineWord(arg, msg) {
   let word = createSentence(arg, true)
@@ -90,7 +133,7 @@ function defineWord(arg, msg) {
       } else if (json.data.length === 0) {
         msg.reply('Please make sure you entered a valid word!')
       } else {
-        testEmbed(msg, word, encoded, json);
+        Embed(msg, word, encoded, json);
       }
     });
   } catch {
@@ -99,53 +142,6 @@ function defineWord(arg, msg) {
 }
 
 
-function testEmbed(msg, word, encoded, json) {
-  let definitions = ""
-  let tags = ""
-  json.data[0].senses.forEach((word, index) => {
-    definitions += `\r ${index + 1}.  ${word.english_definitions[0]}`
-  })
-
-  if (json.data[0].tags.length === 1 && json.data[0].is_common) {
-    tags += `${json.data[0].tags[0]}, common word`
-  }
-
-  else if (json.data[0].is_common) {
-    tags += `common word`
-  }
-
-  else if (json.data[0].tags.length > 0) {
-    tags += `${json.data[0].tags[0]}`
-  }
-
-  else {
-    tags += 'No tags'
-  }
-
-  msg.channel.send({
-  "embed": {
-    "title": `Link to ${word} on Jisho.org`,
-    "url": `https://jisho.org/search/${encoded}`,
-    "color": 2273161,
-    "fields": [
-      {
-        "name": "Reading(s):",
-        "value": `${json.data[0].japanese[0].word} (${json.data[0].japanese[0].reading})`
-      },
-      {
-        "name": "Definition(s):",
-        "value": `${definitions}`
-      },
-      {
-        "name": "Tag(s):",
-        "value": `${tags}`
-      }
-    ]
-  }
-}
-
-);
-}
 
 // log into Discord
 client.login(keys.botSecretToken)
