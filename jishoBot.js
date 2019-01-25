@@ -100,6 +100,28 @@ function defineWord(arg, msg) {
 
 
 function testEmbed(msg, word, encoded, json) {
+  let definitions = ""
+  let tags = ""
+  json.data[0].senses.forEach((word, index) => {
+    definitions += `\r ${index + 1}.  ${word.english_definitions[0]}`
+  })
+
+  if (json.data[0].tags.length === 1 && json.data[0].is_common) {
+    tags += `${json.data[0].tags[0]}, common word`
+  }
+
+  else if (json.data[0].is_common) {
+    tags += `common word`
+  }
+
+  else if (json.data[0].tags.length > 0) {
+    tags += `${json.data[0].tags[0]}`
+  }
+
+  else {
+    tags += 'No tags'
+  }
+
   msg.channel.send({
   "embed": {
     "title": `Link to ${word} on Jisho.org`,
@@ -112,11 +134,11 @@ function testEmbed(msg, word, encoded, json) {
       },
       {
         "name": "Definition(s):",
-        "value": `${json.data[0].senses[0].english_definitions[0]}`
+        "value": `${definitions}`
       },
       {
         "name": "Tag(s):",
-        "value": "blank for now"
+        "value": `${tags}`
       }
     ]
   }
