@@ -2,7 +2,6 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
 const keys = require('./keys.json')
-const unirest = require('unirest')
 const request = require('request')
 const { Translate } = require('@google-cloud/translate');
 
@@ -68,11 +67,21 @@ function translateMsg(msg) {
 //Searches English or Japanese word on Jisho.org
 function defineWord(arg, msg) {
   let encoded = encodeURIComponent(arg) //Since we may send Asian characters, we must encode it!
+
+  if (arg.length > 2) {
+    encoded = encoded.replace("%2C", "%20")
+    msg.reply(encoded)
+  }
+
   try {
     request({ url: `https://jisho.org/api/v1/search/words?keyword=${encoded}`, json: true }, function(err, res, json) {
       if (err) {
         msg.reply(err)
-      } else if (json.data.length === 0) {
+      }
+
+      else if (json.data.length === 0) {
+        // msg.reply(arg)
+        // msg.reply(msg.content)
         msg.reply('Please make sure you entered a valid word!')
       } else {
         msg.reply(`definition: ${json.data[0].senses[0].english_definitions[0]}, reading: ${json.data[0].japanese[0].reading}, kanji: ${json.data[0].japanese[0].word}}`)
