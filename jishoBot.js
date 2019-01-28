@@ -29,9 +29,9 @@ function processCommand(receivedMessage) {
   let primaryCommand = splitCommand[0] // The first word directly after the exclamation is the command
   let arguments = splitCommand.slice(1) // All other words are arguments/parameters/options for the command
 
-  if (primaryCommand === 'translate') {
+  if (primaryCommand === 'translate' || primaryCommand === 'trans') {
     translateMsg(arguments, receivedMessage)
-  } else if (primaryCommand === "define") {
+  } else if (primaryCommand === "define" || primaryCommand === "def") {
     defineWord(arguments, receivedMessage)
   }
 
@@ -40,6 +40,26 @@ function processCommand(receivedMessage) {
   }
 }
 //////////////Edwin's code///////////////////////////
+
+
+//Embeds the given error message in Discord
+function errorMsg(msg, err) {
+  msg.channel.send({
+
+    "embed": {
+      "color": 16312092,
+      "footer": {
+        "text": "再試行してください"
+      },
+
+      "fields": [{
+        "name": "Error:",
+        "value": err
+      }]
+    }
+  })
+}
+
 
 // creates a sentence (or word) from given array. Used in translateMsg and defineWord
 function createSentence(arr, isWord = false) {
@@ -53,48 +73,64 @@ function createSentence(arr, isWord = false) {
   return sentence
 }
 
-//translates the given message to either jp -> en or en -> jp given inputs and outputs it in Discord
-function translateMsg(arg, msg) {
-  let target = arg[0] //target language is the first argument
-  let sentence = ''
-  let footerText = ''
-  if (arg[0] === 'jp') { // if user wants to translate to Japanese
-    target = 'ja'
-    sentence = createSentence(arg)
-    footerText = `English -> Japanese`
-  } else if (arg[0] === 'en') { //translate to English
-    target = arg[0]
-    sentence = createSentence(arg)
-    footerText = 'Japanese -> English'
-  } else { //if no input, translate to English by default.
-          //However, this can be made more flexible so you can have it output other languages if the first arg is different
-    target = 'en'
-    sentence = createSentence(arg, true)
-    footerText = 'Japanese -> English'
-  }
-
-  //Use Google's API
+function googleTranslate(sentence, target, msg, footerText) {
+  //Use Google's API and Embed
   translate
     .translate(sentence, target)
     .then(results => {
       const translation = results[0]
       msg.channel.send({
-      "embed": {
-        "color": 4886754,
-        "footer": {
-          "text": footerText
-        },
+        "embed": {
+          "color": 4886754,
+          "footer": {
+            "text": footerText
+          },
 
-        "fields": [{
-          "name": "Translation:",
-          "value": translation
-        }]
-      }
-    })
+          "fields": [{
+            "name": "Translation:",
+            "value": translation
+          }]
+        }
+      })
     })
     .catch(err => {
       console.error('ERROR:', err)
     });
+}
+
+//translates the given message to either jp -> en or en -> jp given inputs and outputs it in Discord
+function translateMsg(arg, msg) {
+  let target = arg[0] //target language is the first argument
+  let sentence = ''
+  let footerText = ''
+
+  if (arg.length === 0) { //if no args are entered / only whitespace for the sentence
+    errorMsg(msg, "Please enter valid inputs! Please refer to the !help command for more information")
+  }
+
+  else {
+      if (arg[0] === 'jp') { // if user wants to translate to Japanese
+        target = 'ja'
+        sentence = createSentence(arg)
+        footerText = `English -> Japanese`
+      } else if (arg[0] === 'en') { //translate to English
+        target = arg[0]
+        sentence = createSentence(arg)
+        footerText = 'Japanese -> English'
+      } else { //if no input, translate to English by default.
+        //However, this can be made more flexible so you can have it output other languages if the first arg is different
+        target = 'en'
+        sentence = createSentence(arg, true)
+        footerText = 'Japanese -> English'
+      }
+
+      googleTranslate(sentence, target, msg, footerText)
+
+
+  }
+
+
+
 }
 
 // Embeds given data from jisho.org and makes it look nice in Discord
@@ -153,15 +189,18 @@ function defineWord(arg, msg) {
   try {
     request({ url: link, json: true }, function(err, res, json) {
       if (err) {
-        msg.reply(err)
-      } else if (json.data.length === 0) {
-        msg.reply('Please make sure you entered a valid word!')
+        errorMsg(msg, err)
+      } else if (arg.length === 0) {
+        errorMsg(msg, 'Please enter valid inputs! Please refer to the !help command for more information')
+      }
+      else if (json.data.length === 0) {
+        errorMsg(msg, 'Please make sure you entered a valid word! Please refer to the !help command for more information')
       } else {
         EmbedJisho(msg, word, encoded, json);
       }
     });
   } catch {
-    msg.reply('There was an error! The Jisho server may be down, or your link to the dictionary for your BOT is incorect')
+    errorMsg(msg, 'There was an error! The Jisho server may be down, or your link to the dictionary for your BOT is incorect')
   }
 }
 
@@ -221,7 +260,6 @@ function helpMsg(arg, msg) {
     })
   }
 }
-
 
 
 
