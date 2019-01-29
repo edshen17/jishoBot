@@ -8,11 +8,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-```
 * Node.js
 * Discord 
 * Google Cloud Platform (GCP) account
-```
 
 ### Installing
 1. ```git clone https://github.com/edshen17/jishoBot.git ```
@@ -24,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Using jishoBot!
 
-Once you have the bot up and running, you can type !translate (or !trans), !define (or !def) to translate/define words. You can also type !help for more instructions.
+Once you have the bot up and running, you can type *!translate (or !trans), !define (or !def)* to translate/define words. You can also type *!help* for more instructions.
 ###### !translate
  ```
  !translate en <Japanese sentence> will output an English translation of the sentence given.
@@ -34,6 +32,9 @@ Example:
 !translate en こんにちは (outputs Hello) 
 !translate jp Hello (outputs こんにちは)
 ```
+![screenshot_2](https://user-images.githubusercontent.com/15848507/51932665-9402f380-23cd-11e9-8cb4-8116f857e182.png)
+
+
 ###### !define
 ```
 !define <kana/kanji>
@@ -44,6 +45,8 @@ Please note that sometimes English words can be accidentally turned into romaji 
 Example:
 !define こんにちは (outputs the reading, definition, and tags of こんにちは)
 ```
+![screenshot_2](https://user-images.githubusercontent.com/15848507/51932735-bd238400-23cd-11e9-86d7-47e394144779.png)
+
 ## Built With
 
 * [Node.js](https://nodejs.org/en/) - Javascript runtime
@@ -51,10 +54,10 @@ Example:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
-* Testers on Discord server (special thanks to Trevor, Nodar, Christopher, Akira, Yui, Asano)
+* Testers on Discord server (special thanks to Akira, Asano, Christopher, Nodar, Trevor, Yui)
 
 
