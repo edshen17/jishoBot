@@ -1,12 +1,12 @@
 //Imports
 const Discord = require('discord.js')
 const client = new Discord.Client()
-const keys = require('./keys.json')
+const config = require('./config.json')
 const request = require('request')
 const { Translate } = require('@google-cloud/translate')
 
 //For Google Translate
-const projectId = keys.googleProjectID
+const projectId = config.googleProjectID
 const translate = new Translate({
   projectId: projectId,
 });
@@ -312,4 +312,4 @@ function helpMsg(arg, client) {
 
 
 // log into Discord
-client.login(keys.botSecretToken)
+client.login(config.botSecretToken)
