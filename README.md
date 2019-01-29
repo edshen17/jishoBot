@@ -32,8 +32,9 @@ Example:
 !translate en こんにちは (outputs Hello) 
 !translate jp How's today's weather? (outputs 今日の天気はどうですか？)
 ```
-![screenshot_2](https://user-images.githubusercontent.com/15848507/51932665-9402f380-23cd-11e9-8cb4-8116f857e182.png)
-
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/15848507/51932665-9402f380-23cd-11e9-8cb4-8116f857e182.png">
+</p>
 
 ###### !define
 ```
@@ -45,7 +46,10 @@ Please note that sometimes English words can be accidentally turned into romaji 
 Example:
 !define kuru (outputs the reading, definition, and tags of 来る)
 ```
-![screenshot_2](https://user-images.githubusercontent.com/15848507/51932735-bd238400-23cd-11e9-86d7-47e394144779.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/15848507/51932735-bd238400-23cd-11e9-86d7-47e394144779.png">
+</p>
+
 
 ## Built With
 
