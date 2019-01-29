@@ -58,6 +58,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-* Testers on Discord server (special thanks to Akira, Asano, Christopher, Nodar, Trevor, Yui)
+* Testers on Discord server (special thanks to Akira, Asano, Christopher, Nodar, Trevor, and Yui)
 
 
