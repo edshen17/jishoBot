@@ -313,3 +313,5 @@ function helpMsg(arg, client) {
 
 // log into Discord
 client.login(config.botSecretToken)
+
+module.exports.createSentence = createSentence;
