@@ -15,7 +15,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 1. ```git clone https://github.com/edshen17/jishoBot.git ```
 2. Input your Google Cloud API in config.json
-3. Download your API private key from Google and add to your directory [(more instructions here)](https://cloud.google.com/translate/docs/quickstart-client-libraries#client-libraries-install-nodejs)
+3. Download your API private key from Google and add it to your directory [(more instructions here)](https://cloud.google.com/translate/docs/quickstart-client-libraries#client-libraries-install-nodejs)
 4. Start up Command Prompt or Terminal and navigate to this directory: ```cd <clone directory>```
 5. Install all the dependences this bot uses by typing: ```npm install ``` 
 6. Invite the bot to your server [(more instructions here)](https://stackoverflow.com/questions/37689289/how-to-join-a-server) and input your Discord bot key in config.json
