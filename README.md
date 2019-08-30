@@ -41,7 +41,7 @@ Example:
 !define <kana/kanji>
 Outputs the first item listed in Jisho of the inputted word.
 Please note that sometimes English words can be accidentally turned into romaji due to how Jisho.org works
-(eg: inputting 'go' can result in 五)
+(eg: inputting 'go' can result in 五. In such cases, put quotes around the string "go" to get the English word)
 
 Example:
 !define kuru (outputs the reading, definition, and tags of 来る)
